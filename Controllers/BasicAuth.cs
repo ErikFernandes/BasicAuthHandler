@@ -17,7 +17,7 @@ namespace BasicAuthHandler.Controllers
             {
                 StatusCode = (int)HttpStatusCode.OK,
                 ContentType = "text/html",
-                Content = Resources.Accept
+                Content = Resources.AcceptPage
             };
         }
     }
