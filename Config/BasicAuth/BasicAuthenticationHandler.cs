@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using BasicAuthHandler.Global;
+using BasicAuthHandler.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using System.Text;
@@ -11,42 +13,49 @@ namespace RoundTheCode.BasicAuthentication.Shared.Authentication.Basic.Handlers
     {
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            // Verifica se o cabecalho de autorização foi fornecido
+            // Check if authorization header was provided
             if (!Request.Headers.ContainsKey("Authorization"))
             { return Task.FromResult(AuthenticateResult.Fail("Client did not provide an authorization header")); }
 
+
             var authorizationHeader = Request.Headers.Authorization.ToString();
 
-            // Verifica se o cabecalho de autorização comecou com 'Basic '
+            // Check if authorization header starts with 'Basic '
             if (!authorizationHeader.StartsWith("Basic ", StringComparison.OrdinalIgnoreCase))
             { return Task.FromResult(AuthenticateResult.Fail("Authorization header needs to start with 'Basic '")); }
 
-            // Desencripta o cabecalho de autorização e separa o user da key
+            // Decode authorization header and separate user from key
             string authBase64Decoded = Encoding.UTF8.GetString(Convert.FromBase64String(authorizationHeader.Replace("Basic ", "", StringComparison.OrdinalIgnoreCase)));
             string[] authSplit = authBase64Decoded.Split([':'], 2);
 
-            // Verifica se o user e a key foram fornecios
+            // Check if user and key were provided
             if (authSplit.Length != 2)
             { return Task.FromResult(AuthenticateResult.Fail("Invalid Authorization header format")); }
 
-            // Reserva o valor do User e Key
+            // Store the value of User and Key
             string clientUser = authSplit[0];
             string clientKey = authSplit[1];
 
-            // Checa se o User e a Key são válidos
+            // Check if User and Key are valid
             bool credIsValid()
             {
-                return true;
+                AcceptUserKeysModel model = new()
+                {
+                    Username = clientUser,
+                    Key = clientKey
+                };
+
+                return GlobalVariables.AcceptUserKeys.Any(x => x.Username == clientUser && x.Key == clientKey);
             }
 
 
-            // Verifica se as credenciais foram são válidas
+            // Check if credentials are valid
             if (!credIsValid())
             {
                 return Task.FromResult(AuthenticateResult.Fail(string.Format("The secret is incorrect for the client '{0}'", clientUser)));
             }
 
-            // Autentica o client
+            // Authenticate the client
             BasicAuthenticationClient client = new()
             {
                 AuthenticationType = BasicAuthenticationDefaults.AuthenticationScheme,
@@ -54,13 +63,13 @@ namespace RoundTheCode.BasicAuthentication.Shared.Authentication.Basic.Handlers
                 Name = clientUser
             };
 
-            // Define o token como nome
+            // Set the token as name
             ClaimsPrincipal claimsPrincipal = new(new ClaimsIdentity(client,
             [
                 new Claim(ClaimTypes.Name, clientUser)
             ]));
 
-            // Retorna autorizado
+            // Return authorized
             return Task.FromResult(AuthenticateResult.Success(new AuthenticationTicket(claimsPrincipal, Scheme.Name)));
         }
     }
