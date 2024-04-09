@@ -66,7 +66,7 @@ namespace BasicAuthHandler.Properties {
         ///&lt;head&gt;
         ///    &lt;meta charset=&quot;UTF-8&quot;&gt;
         ///    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
-        ///    &lt;title&gt;Bem-vindo!&lt;/title&gt;
+        ///    &lt;title&gt;Welcome!&lt;/title&gt;
         ///    &lt;style&gt;
         ///        body {
         ///            font-family: Arial, sans-serif;
@@ -84,11 +84,21 @@ namespace BasicAuthHandler.Properties {
         ///            font-size: 18px;
         ///        }
         ///
-        ///        [o restante da cadeia de caracteres foi truncado]&quot;;.
+        ///        . [o restante da cadeia de caracteres foi truncado]&quot;;.
         /// </summary>
-        internal static string Accept {
+        internal static string AcceptPage {
             get {
-                return ResourceManager.GetString("Accept", resourceCulture);
+                return ResourceManager.GetString("AcceptPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta um recurso localizado do tipo System.Byte[].
+        /// </summary>
+        internal static byte[] AcceptUserKeys {
+            get {
+                object obj = ResourceManager.GetObject("AcceptUserKeys", resourceCulture);
+                return ((byte[])(obj));
             }
         }
     }
