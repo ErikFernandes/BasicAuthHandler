@@ -1,5 +1,5 @@
 @BasicAuthHandler_HostAddress = http://localhost:443
-@TokenAuth = VEVTVEU6VEVTVEU=
+@TokenAuth = R2VuZXJpY05hbWU6VXNlcktleTEyMzQ=
 
 GET {{BasicAuthHandler_HostAddress}}/BasicAuth
 Accept: application/json
