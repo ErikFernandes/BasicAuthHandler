@@ -2,6 +2,6 @@
 {
     public class BasicAuthenticationDefaults
     {
-        public const string AuthenticationScheme = "Basic";
+        public const string AuthenticationScheme = "basic";
     }
 }
