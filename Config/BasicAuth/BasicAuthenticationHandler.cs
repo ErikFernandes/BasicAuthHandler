@@ -2,6 +2,7 @@
 using BasicAuthHandler.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -13,6 +14,10 @@ namespace RoundTheCode.BasicAuthentication.Shared.Authentication.Basic.Handlers
     {
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
+            // Check if client did not provide an IP address
+            if (Request.HttpContext.Connection.RemoteIpAddress == null)
+            { return Task.FromResult(AuthenticateResult.Fail("Client did not provide an IP address")); }
+
             // Check if authorization header was provided
             if (!Request.Headers.ContainsKey("Authorization"))
             { return Task.FromResult(AuthenticateResult.Fail("Client did not provide an authorization header")); }
@@ -48,7 +53,6 @@ namespace RoundTheCode.BasicAuthentication.Shared.Authentication.Basic.Handlers
                 return GlobalVariables.AcceptUserKeys.Any(x => x.Username == clientUser && x.Key == clientKey);
             }
 
-
             // Check if credentials are valid
             if (!credIsValid())
             {
@@ -68,6 +72,29 @@ namespace RoundTheCode.BasicAuthentication.Shared.Authentication.Basic.Handlers
             [
                 new Claim(ClaimTypes.Name, clientUser)
             ]));
+
+            #region Add client to list of clients accepted
+
+            IPAddress ipClient = Request.HttpContext.Connection.RemoteIpAddress;
+            if (GlobalVariables.ClientsAccept.TryGetValue(ipClient, out ClientAcceptModel? value))
+            {
+                value.HitsAccept++;
+                value.LastAccessDate = DateTime.Now;
+                value.Username = clientUser;
+                value.Key = clientKey;
+            }
+            else 
+            {
+                GlobalVariables.ClientsAccept.TryAdd(ipClient, new ClientAcceptModel
+                {
+                    IpAddress = ipClient,
+                    HitsAccept = 1,
+                    Username = clientUser,
+                    Key = clientKey
+                });
+            }
+
+            #endregion
 
             // Return authorized
             return Task.FromResult(AuthenticateResult.Success(new AuthenticationTicket(claimsPrincipal, Scheme.Name)));
