@@ -15,6 +15,8 @@ To test and analyze this project, simply clone it to your machine:
 ```
 git clone https://github.com/ErikFernandes/BasicAuthHandler.git
 ```
+### Postman
+You can access the model in Postman by clicking [here](https://www.postman.com/madaraai/workspace/fernandes/collection/30440041-9be52bf0-560c-471a-b4b8-5269da61db3c?action=share&creator=30440041).
 
 ### Configuration
 If you wish to host the API for testing on your machine, after cloning the repository, you need to edit the Properties/launchSettings.json file and change the IP to your current IP and the desired port.
