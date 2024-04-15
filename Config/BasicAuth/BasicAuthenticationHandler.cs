@@ -23,38 +23,28 @@ namespace RoundTheCode.BasicAuthentication.Shared.Authentication.Basic.Handlers
             { return Task.FromResult(AuthenticateResult.Fail("Client did not provide an authorization header")); }
 
 
-            var authorizationHeader = Request.Headers.Authorization.ToString();
+            string authorizationHeader = Request.Headers.Authorization.ToString();
 
             // Check if authorization header starts with 'Basic '
             if (!authorizationHeader.StartsWith("Basic ", StringComparison.OrdinalIgnoreCase))
             { return Task.FromResult(AuthenticateResult.Fail("Authorization header needs to start with 'Basic '")); }
 
             // Decode authorization header and separate user from key
-            string authBase64Decoded = Encoding.UTF8.GetString(Convert.FromBase64String(authorizationHeader.Replace("Basic ", "", StringComparison.OrdinalIgnoreCase)));
+            string hashAuth = authorizationHeader.Replace("Basic ", "", StringComparison.OrdinalIgnoreCase);
+            string authBase64Decoded = Encoding.UTF8.GetString(Convert.FromBase64String(hashAuth));
             string[] authSplit = authBase64Decoded.Split([':'], 2);
 
             // Check if user and key were provided
             if (authSplit.Length != 2)
             { return Task.FromResult(AuthenticateResult.Fail("Invalid Authorization header format")); }
 
+
             // Store the value of User and Key
             string clientUser = authSplit[0];
             string clientKey = authSplit[1];
 
-            // Check if User and Key are valid
-            bool credIsValid()
-            {
-                AcceptUserKeysModel model = new()
-                {
-                    Username = clientUser,
-                    Key = clientKey
-                };
-
-                return GlobalVariables.AcceptUserKeys.Any(x => x.Username == clientUser && x.Key == clientKey);
-            }
-
-            // Check if credentials are valid
-            if (!credIsValid())
+            // Check if User and Key is not valid
+            if (!GlobalVariables.AcceptUserKeys.Any(x => x.Username == clientUser && x.Key == clientKey))
             {
                 return Task.FromResult(AuthenticateResult.Fail(string.Format("The secret is incorrect for the client '{0}'", clientUser)));
             }

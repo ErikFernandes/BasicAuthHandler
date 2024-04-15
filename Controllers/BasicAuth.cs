@@ -8,11 +8,11 @@ using System.Net;
 namespace BasicAuthHandler.Controllers
 {
     [ApiController]
+    [BasicAuthorization]
     [Route("BasicAuth")]
     public class BasicAuth : ControllerBase
     {
         [HttpGet]
-        [BasicAuthorization]
         public ActionResult Get()
         {
             ClientAcceptModel clientAcceptModel = 
