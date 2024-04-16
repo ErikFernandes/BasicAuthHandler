@@ -1,6 +1,5 @@
 using BasicAuthHandler.Global;
 using BasicAuthHandler.Models;
-using BasicAuthHandler.Properties;
 using Microsoft.AspNetCore.Mvc;
 using RoundTheCode.BasicAuthentication.Authentication.Basic.Attributes;
 using System.Net;
@@ -24,8 +23,8 @@ namespace BasicAuthHandler.Controllers
             return new ContentResult
             {
                 StatusCode = (int)HttpStatusCode.OK,
-                ContentType = "text/html",
-                Content = Resources.AcceptPage
+                ContentType = "text",
+                Content = "Access Granted!"
             };
         }
     }

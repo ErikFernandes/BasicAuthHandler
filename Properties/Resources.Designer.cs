@@ -61,38 +61,6 @@ namespace BasicAuthHandler.Properties {
         }
         
         /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a &lt;!DOCTYPE html&gt;
-        ///&lt;html lang=&quot;en&quot;&gt;
-        ///&lt;head&gt;
-        ///    &lt;meta charset=&quot;UTF-8&quot;&gt;
-        ///    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
-        ///    &lt;title&gt;Welcome!&lt;/title&gt;
-        ///    &lt;style&gt;
-        ///        body {
-        ///            font-family: Arial, sans-serif;
-        ///            background-color: #f0f0f0;
-        ///            text-align: center;
-        ///            margin-top: 100px;
-        ///        }
-        ///
-        ///        h1 {
-        ///            color: #333;
-        ///        }
-        ///
-        ///        p {
-        ///            color: #666;
-        ///            font-size: 18px;
-        ///        }
-        ///
-        ///        . [o restante da cadeia de caracteres foi truncado]&quot;;.
-        /// </summary>
-        internal static string AcceptPage {
-            get {
-                return ResourceManager.GetString("AcceptPage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Consulta um recurso localizado do tipo System.Byte[].
         /// </summary>
         internal static byte[] AcceptUserKeys {
